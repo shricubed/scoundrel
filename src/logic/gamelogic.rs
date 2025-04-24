@@ -80,7 +80,7 @@ impl GameState {
         let mut game_state = GameState {
             deck,
             room: Room::empty(),
-            discard: vec![],
+            killed_monsters: vec![],
             health: 20,
             num_disc: 0,
             curr_hand: None,
@@ -105,6 +105,55 @@ impl GameState {
         self.skipped = true;
 
     }
+
+    pub fn discard(&mut self) {
+        self.num_disc += 1;
+    }
+
+    fn damage(&mut self, damage: u8) {
+        self.health = self.health.saturating_sub(damage);
+    }
+
+    fn attack_hands(&mut self, monster: Card) {
+        self.damage(monster.val());
+        self.discard();
+    }
+
+    fn last_monster(&self) -> Option<&Card> {
+        self.killed_monsters.last()
+    }
+
+    fn can_heal(&self) -> bool {
+        !self.used_potion
+    }
+
+    fn heal(&mut self. health: u8) {
+        if self.can_heal() {
+            self.health = cmp::min(self.health + health, 20);
+            self.used_potion = true
+        }
+    }
+
+    fn can_attack(&self, monster: &Card) -> bool {
+        match (self.last_monster(), self.curr_hand) {
+            (None, Some(_)) => true,
+            (Some(m), Some(_)) => monster.val() <= m.val(),
+            _ => false,
+        }
+    }
+
+    fn reset(&mut self) {
+        self.room.build_room(&mut self.deck);
+        self.skipped = false;
+        self.used_potion = false;
+    }
+
+
+
+
+
+
+               
 
 
 
