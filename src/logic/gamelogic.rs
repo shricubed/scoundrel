@@ -148,6 +148,22 @@ impl GameState {
         self.used_potion = false;
     }
 
+    fn discard_weapon(&mut self) {
+        if self.equipped_weapon.is_some() {
+            self.equipped_weapon = None;
+            self.discard();
+        }
+
+        self.num_disc += self.killed_monsters.len() as u8;
+        self.killed_monsters.clear();
+    }
+
+    fn equip(&mut self, card: Card) {
+        self.equipped_weapon = Some(card);
+    }
+
+
+
 
 
 
